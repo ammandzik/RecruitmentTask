@@ -7,8 +7,6 @@ import lombok.Data;
 @Data
 public class BranchInfo {
 
-    String branchName;
-    String commitSha;
-
-
+    private String branchName;
+    private String commitSha;
 }

@@ -1,14 +1,15 @@
 package com.RepoTask.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.util.List;
 
 @AllArgsConstructor
+@Data
 public class RepoInfo {
 
-    public String repositoryName;
-    public String ownerLogin;
-    public List<BranchInfo> branches;
-
+    private String repositoryName;
+    private String ownerLogin;
+    private List<BranchInfo> branches;
 }
