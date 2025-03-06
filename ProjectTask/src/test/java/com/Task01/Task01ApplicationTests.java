@@ -1,4 +1,4 @@
-package com.Task01.task01;
+package com.Task01;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
