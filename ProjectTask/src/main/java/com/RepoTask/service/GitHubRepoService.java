@@ -19,13 +19,13 @@ import java.util.Map;
 
 @Service
 public class GitHubRepoService {
+    public static final String GITHUB_API_URL_REPO = "https://api.github.com/users/%s/repos";
     private static final String GITHUB_API_URL_BRANCHES = "https://api.github.com/repos/%s/%s/branches";
-    private static final String GITHUB_API_URL_REPO = "https://api.github.com/users/%s/repos";
     private final OkHttpClient client = new OkHttpClient();
     private static final String STATUS = "status";
     private static final String MSG = "message";
 
-    public Mono<ResponseEntity<Object>> getResponseEntityMono(String username) {
+    public Mono<ResponseEntity<Object>> getResponseEntityReposWithBranches(String username) {
 
         String url = String.format(GITHUB_API_URL_REPO, username);
 

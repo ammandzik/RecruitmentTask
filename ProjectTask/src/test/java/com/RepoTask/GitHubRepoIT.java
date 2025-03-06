@@ -2,24 +2,36 @@ package com.RepoTask;
 
 import com.RepoTask.service.GitHubRepoService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
-@ExtendWith(SpringExtension.class)
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
+@SpringBootTest
 public class GitHubRepoIT {
 
     @Autowired
     GitHubRepoService gitHubRepoService;
 
     @Test
-    void fetchReposWithBranchesAndCommitShaCorrectly() {
+    void fetchReposWithBranchesAndCommitsShaCorrectly() {
 
         //given
+        String USERNAME = "octocat";
 
         //when
+        Mono<ResponseEntity<Object>> result = assertDoesNotThrow(() -> gitHubRepoService.getResponseEntityReposWithBranches(USERNAME));
 
         //then
+        StepVerifier.create(result)
+                .expectNextMatches(response ->
+                        response.getStatusCode().is2xxSuccessful()
+
+                )
+                .verifyComplete();
 
     }
 }

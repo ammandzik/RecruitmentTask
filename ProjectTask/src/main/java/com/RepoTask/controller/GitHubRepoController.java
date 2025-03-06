@@ -20,7 +20,7 @@ public class GitHubRepoController {
     @GetMapping("/non-forks/{username}")
     public Mono<ResponseEntity<Object>> getNonForkRepositories(@PathVariable String username) {
 
-        return gitHubRepoService.getResponseEntityMono(username);
+        return gitHubRepoService.getResponseEntityReposWithBranches(username);
     }
 
 
