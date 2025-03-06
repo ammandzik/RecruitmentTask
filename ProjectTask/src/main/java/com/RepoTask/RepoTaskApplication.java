@@ -1,13 +1,13 @@
-package com.Task01;
+package com.RepoTask;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Task01Application {
+public class RepoTaskApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Task01Application.class, args);
+		SpringApplication.run(RepoTaskApplication.class, args);
 	}
 
 }
