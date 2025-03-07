@@ -37,6 +37,7 @@ public class GitHubRepoService {
     }
 
     public Uni<ResponseEntity<?>> fetchUserReposUni(Request request) {
+
         return Uni.createFrom().item(() -> {
             try (Response response = client.newCall(request).execute()) {
                 if (response.code() == 404) {
@@ -103,6 +104,4 @@ public class GitHubRepoService {
             return branchesList;
         }
     }
-
-
 }
