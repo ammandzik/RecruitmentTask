@@ -2,22 +2,23 @@ package QuarkusTask.controller;
 
 import QuarkusTask.service.GitHubRepoService;
 import io.smallrye.mutiny.Uni;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @AllArgsConstructor
-@RequestMapping("api/github")
+@Path("api/github")
 class GitHubController {
 
     private final GitHubRepoService gitHubRepoService;
-
-    @GetMapping("/non-forks/{username}")
-    public Uni<ResponseEntity<?>> getNonForkRepositories(@PathVariable String username) {
+    @GET
+    @Path("/non-forks/{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Uni<ResponseEntity<?>> getNonForkRepositories(@PathParam("username") String username) {
 
         return gitHubRepoService.getResponseEntityReposWithBranches(username);
     }

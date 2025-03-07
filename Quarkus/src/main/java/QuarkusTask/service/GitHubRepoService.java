@@ -19,7 +19,7 @@ import java.util.Map;
 
 @Service
 public class GitHubRepoService {
-    public static final String GITHUB_API_URL_REPO = "https://api.github.com/users/%s/repos";
+    private static final String GITHUB_API_URL_REPO = "https://api.github.com/users/%s/repos";
     private static final String GITHUB_API_URL_BRANCHES = "https://api.github.com/repos/%s/%s/branches";
     private final OkHttpClient client = new OkHttpClient();
     private static final String STATUS = "status";
@@ -60,7 +60,7 @@ public class GitHubRepoService {
         }).onItem().transform(result -> result);
     }
 
-    public List<RepoInfo> fetchUserRepos(OkHttpClient client, Request request) throws IOException {
+    public List<RepoInfo> fetchUserRepos(OkHttpClient client, Request request) throws IOException, NullPointerException {
 
         try (Response response = client.newCall(request).execute()) {
 
@@ -81,7 +81,7 @@ public class GitHubRepoService {
         }
     }
 
-    public List<BranchInfo> getBranchesForRepo(String owner, String repo, OkHttpClient client) throws IOException {
+    public List<BranchInfo> getBranchesForRepo(String owner, String repo, OkHttpClient client) throws IOException, NullPointerException {
 
         String url = String.format(GITHUB_API_URL_BRANCHES, owner, repo);
 
