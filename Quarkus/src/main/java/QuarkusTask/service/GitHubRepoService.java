@@ -29,10 +29,7 @@ public class GitHubRepoService {
 
         String url = String.format(GITHUB_API_URL_REPO, username);
 
-        Request request = new Request.Builder()
-                .url(url)
-                .header("Accept", "application/vnd.github.v3+json")
-                .build();
+        Request request = createRequest(url);
         return fetchUserReposUni(request);
     }
 
@@ -85,10 +82,7 @@ public class GitHubRepoService {
 
         String url = String.format(GITHUB_API_URL_BRANCHES, owner, repo);
 
-        Request request = new Request.Builder()
-                .url(url)
-                .header("Accept", "application/vnd.github.v3+json")
-                .build();
+        Request request = createRequest(url);
 
         try (Response response = client.newCall(request).execute()) {
 
@@ -103,5 +97,13 @@ public class GitHubRepoService {
             }
             return branchesList;
         }
+    }
+
+    private Request createRequest(String url){
+
+        return new Request.Builder()
+                .url(url)
+                .header("Accept", "application/vnd.github.v3+json")
+                .build();
     }
 }
