@@ -24,7 +24,7 @@ class GitHubServiceIT {
         //when & then
         Uni<Object> response = assertDoesNotThrow(() -> gitHubRepoService.getResponseEntityReposWithBranches(USERNAME));
         RestAssured.given()
-                .when().get("/api/github/non-forks/octocat")
+                .when().get("/api/github/non-forks/" + USERNAME)
                 .then()
                 .statusCode(anyOf(
                         is(200),
