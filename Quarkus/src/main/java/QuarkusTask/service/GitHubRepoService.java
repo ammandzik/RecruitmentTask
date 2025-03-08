@@ -25,30 +25,37 @@ public class GitHubRepoService {
     private static final String STATUS = "status";
     private static final String MSG = "message";
 
-    public Uni<ResponseEntity<?>> getResponseEntityReposWithBranches(String username) {
+    public Uni<Object> getResponseEntityReposWithBranches(String username) {
 
         String url = String.format(GITHUB_API_URL_REPO, username);
-
         Request request = createRequest(url);
+
         return fetchUserReposUni(request);
     }
 
-    public Uni<ResponseEntity<?>> fetchUserReposUni(Request request) {
+    public Uni<Object> fetchUserReposUni(Request request) {
 
         return Uni.createFrom().item(() -> {
             try (Response response = client.newCall(request).execute()) {
+                if (response.code() == 403) {
+                    return jakarta.ws.rs.core.Response.status(jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity(Map.of("msg", "API calls limit reached", "status", response.code()))
+                            .build();
+                }
                 if (response.code() == 404) {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                            .body(Map.of(STATUS, 404, MSG, "User not found"));
+                    return jakarta.ws.rs.core.Response.status(jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity(Map.of("msg", "User not found", "status", response.code()))
+                            .build();
                 }
                 if (!response.isSuccessful()) {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .body(Map.of(MSG, "GitHub API error", STATUS, response.code()));
+                    return jakarta.ws.rs.core.Response.status(jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity(Map.of("msg", "GitHub API error", "status", response.code()))
+                            .build();
                 }
 
                 List<RepoInfo> repoList = fetchUserRepos(client, request);
 
-                return ResponseEntity.ok(repoList);
+                return jakarta.ws.rs.core.Response.ok(repoList);
 
             } catch (IOException e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -63,7 +70,6 @@ public class GitHubRepoService {
 
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode repositories = objectMapper.readTree(response.body().string());
-
             List<RepoInfo> repoList = new ArrayList<>();
 
             for (JsonNode repo : repositories) {
@@ -81,7 +87,6 @@ public class GitHubRepoService {
     public List<BranchInfo> getBranchesForRepo(String owner, String repo, OkHttpClient client) throws IOException, NullPointerException {
 
         String url = String.format(GITHUB_API_URL_BRANCHES, owner, repo);
-
         Request request = createRequest(url);
 
         try (Response response = client.newCall(request).execute()) {
@@ -99,7 +104,7 @@ public class GitHubRepoService {
         }
     }
 
-    private Request createRequest(String url){
+    private Request createRequest(String url) {
 
         return new Request.Builder()
                 .url(url)

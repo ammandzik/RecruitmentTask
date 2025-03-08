@@ -6,11 +6,9 @@ import io.restassured.RestAssured;
 import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
 class GitHubServiceIT {
@@ -24,8 +22,7 @@ class GitHubServiceIT {
         final String USERNAME = "octocat";
 
         //when & then
-        Uni<ResponseEntity<?>> response = assertDoesNotThrow(() -> gitHubRepoService.getResponseEntityReposWithBranches(USERNAME));
-        assertNotNull(response);
+        Uni<Object> response = assertDoesNotThrow(() -> gitHubRepoService.getResponseEntityReposWithBranches(USERNAME));
         RestAssured.given()
                 .when().get("/api/github/non-forks/octocat")
                 .then()
@@ -36,6 +33,9 @@ class GitHubServiceIT {
                         is(203),
                         is(204)
                 ))
-                .body("size()", greaterThanOrEqualTo(0));
+                .body("size()", greaterThanOrEqualTo(0))
+                .body("[0].name", not(emptyString()))
+                .body("[0].branches", not(emptyString()))
+                .body("[0].branches.size()", greaterThanOrEqualTo(0));
     }
 }
