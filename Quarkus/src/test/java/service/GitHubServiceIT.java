@@ -35,7 +35,6 @@ class GitHubServiceIT {
                 ))
                 .body("size()", greaterThanOrEqualTo(0))
                 .body("[0].name", not(emptyString()))
-                .body("[0].branches", not(emptyString()))
-                .body("[0].branches.size()", greaterThanOrEqualTo(0));
+                .body("[0].branches", not(emptyString()));
     }
 }

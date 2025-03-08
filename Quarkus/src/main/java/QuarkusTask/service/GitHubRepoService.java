@@ -8,8 +8,6 @@ import io.smallrye.mutiny.Uni;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -39,17 +37,17 @@ public class GitHubRepoService {
             try (Response response = client.newCall(request).execute()) {
                 if (response.code() == 403) {
                     return jakarta.ws.rs.core.Response.status(jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR)
-                            .entity(Map.of("msg", "API calls limit reached", "status", response.code()))
+                            .entity(Map.of(STATUS, response.code(), MSG, response.code()))
                             .build();
                 }
                 if (response.code() == 404) {
                     return jakarta.ws.rs.core.Response.status(jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR)
-                            .entity(Map.of("msg", "User not found", "status", response.code()))
+                            .entity(Map.of(STATUS, response.code(), MSG, response.code()))
                             .build();
                 }
                 if (!response.isSuccessful()) {
                     return jakarta.ws.rs.core.Response.status(jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR)
-                            .entity(Map.of("msg", "GitHub API error", "status", response.code()))
+                            .entity(Map.of(STATUS, response.code(), MSG, "GitHub API error"))
                             .build();
                 }
 
@@ -58,8 +56,9 @@ public class GitHubRepoService {
                 return jakarta.ws.rs.core.Response.ok(repoList);
 
             } catch (IOException e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body(Map.of(STATUS, 500, MSG, "Unexpected error"));
+                return jakarta.ws.rs.core.Response.status(jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity(Map.of(STATUS, 500, MSG, "Unexpected error"))
+                        .build();
             }
         }).onItem().transform(result -> result);
     }
