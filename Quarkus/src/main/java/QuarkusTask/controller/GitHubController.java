@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 class GitHubController {
 
     private final GitHubRepoService gitHubRepoService;
-
     @GET
     @Path("/non-forks/{username}")
     @Produces(MediaType.APPLICATION_JSON)
