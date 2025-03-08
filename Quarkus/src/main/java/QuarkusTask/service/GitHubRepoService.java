@@ -36,12 +36,12 @@ public class GitHubRepoService {
         return Uni.createFrom().item(() -> {
             try (Response response = client.newCall(request).execute()) {
                 if (response.code() == 403) {
-                    return jakarta.ws.rs.core.Response.status(jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR)
+                    return jakarta.ws.rs.core.Response.status(jakarta.ws.rs.core.Response.Status.FORBIDDEN)
                             .entity(Map.of(STATUS, response.code(), MSG, "GitHub API limit reached"))
                             .build();
                 }
                 if (response.code() == 404) {
-                    return jakarta.ws.rs.core.Response.status(jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR)
+                    return jakarta.ws.rs.core.Response.status(jakarta.ws.rs.core.Response.Status.NOT_FOUND)
                             .entity(Map.of(STATUS, response.code(), MSG, "User not found"))
                             .build();
                 }
